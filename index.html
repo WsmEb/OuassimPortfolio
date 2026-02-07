@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ouassim El Bachiri </title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #f8f7f4;
+        color: #000;
+        line-height: 1.6;
+      }
+
+      /* Navigation */
+      nav {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 50;
+        background-color: #f8f7f4;
+        border-bottom: 1px solid #e5e5e5;
+      }
+
+      .nav-container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 64px;
+      }
+
+      .nav-brand {
+        font-size: 18px;
+        font-weight: bold;
+        color: #000;
+      }
+
+      .nav-links {
+        display: none;
+        gap: 32px;
+        font-size: 14px;
+      }
+
+      .nav-links a {
+        color: #000;
+        text-decoration: none;
+        transition: opacity 0.3s;
+      }
+
+      .nav-links a:hover {
+        opacity: 0.7;
+      }
+
+      @media (min-width: 768px) {
+        .nav-links {
+          display: flex;
+        }
+      }
+
+      /* Hero Section */
+      .hero {
+        margin-top: 64px;
+        padding: 96px 24px 64px;
+      }
+
+      .hero-container {
+        max-width: 768px;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      .hero h1 {
+        font-size: 48px;
+        font-weight: bold;
+        color: #000;
+        margin-bottom: 24px;
+        line-height: 1.2;
+      }
+
+      @media (min-width: 640px) {
+        .hero h1 {
+          font-size: 56px;
+        }
+      }
+
+      .hero p {
+        font-size: 18px;
+        color: #000;
+        max-width: 672px;
+        margin: 0 auto;
+      }
+
+      /* Who I Am Section */
+      .who-section {
+        padding: 80px 24px;
+        background-color: #f8f7f4;
+      }
+
+      .who-container {
+        max-width: 768px;
+        margin: 0 auto;
+      }
+
+      .who-section h2 {
+        font-size: 36px;
+        font-weight: bold;
+        color: #000;
+        margin-bottom: 32px;
+        text-align: center;
+      }
+
+      @media (min-width: 640px) {
+        .who-section h2 {
+          font-size: 48px;
+        }
+      }
+
+      .who-section p {
+        font-size: 18px;
+        color: #000;
+        line-height: 1.8;
+        margin-bottom: 48px;
+        text-align: center;
+      }
+
+      .education {
+        border-top: 1px solid #000;
+        padding-top: 32px;
+        margin-bottom: 32px;
+      }
+
+      .education h3 {
+        font-size: 24px;
+        font-weight: bold;
+        color: #000;
+        margin-bottom: 24px;
+        text-align: center;
+      }
+
+      .education ul {
+        list-style: none;
+        text-align: center;
+      }
+
+      .education li {
+        font-size: 18px;
+        color: #000;
+        margin-bottom: 16px;
+      }
+
+      .social-links {
+        display: flex;
+        justify-content: center;
+        gap: 32px;
+        margin-top: 48px;
+      }
+
+      .social-links a {
+        color: #000;
+        text-decoration: none;
+        transition: opacity 0.3s;
+      }
+
+      .social-links a:hover {
+        opacity: 0.7;
+      }
+
+      .social-links svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      /* Projects Section */
+      .projects-section {
+        padding: 80px 24px;
+        background-color: #f8f7f4;
+      }
+
+      .projects-container {
+        max-width: 1024px;
+        margin: 0 auto;
+      }
+
+      .projects-section h2 {
+        font-size: 36px;
+        font-weight: bold;
+        color: #000;
+        margin-bottom: 48px;
+        text-align: center;
+      }
+
+      @media (min-width: 640px) {
+        .projects-section h2 {
+          font-size: 48px;
+        }
+      }
+
+      .carousel {
+        position: relative;
+      }
+
+      .carousel-content {
+        overflow: hidden;
+        border: 1px solid #e5e5e5;
+        background-color: #f8f7f4;
+      }
+
+      .carousel-inner {
+        display: flex;
+        transition: transform 0.7s;
+      }
+
+      .carousel-item {
+        flex: 0 0 100%;
+        padding: 48px;
+      }
+
+      @media (min-width: 640px) {
+        .carousel-item {
+          padding: 64px;
+        }
+      }
+
+      .carousel-item h3 {
+        font-size: 24px;
+        font-weight: bold;
+        color: #000;
+        margin-bottom: 16px;
+      }
+
+      @media (min-width: 640px) {
+        .carousel-item h3 {
+          font-size: 28px;
+        }
+      }
+
+      .carousel-item p {
+        font-size: 16px;
+        color: #000;
+        margin-bottom: 24px;
+      }
+
+      .carousel-item a {
+        color: #000;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: bold;
+        transition: opacity 0.3s;
+      }
+
+      .carousel-item a:hover {
+        opacity: 0.7;
+      }
+
+      .carousel-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 24px;
+      }
+
+      .carousel-button {
+        background: none;
+        border: none;
+        padding: 8px;
+        color: #000;
+        cursor: pointer;
+        transition: opacity 0.3s;
+      }
+
+      .carousel-button:hover {
+        opacity: 0.7;
+      }
+
+      .carousel-dots {
+        display: flex;
+        gap: 8px;
+      }
+
+      .carousel-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: #d4d4d4;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .carousel-dot.active {
+        background-color: #000;
+      }
+
+      /* Certificates Section */
+      .certificates-section {
+        padding: 80px 24px;
+        background-color: #f8f7f4;
+      }
+
+      .certificates-container {
+        max-width: 1024px;
+        margin: 0 auto;
+      }
+
+      .certificates-section h2 {
+        font-size: 36px;
+        font-weight: bold;
+        color: #000;
+        margin-bottom: 48px;
+        text-align: center;
+      }
+
+      @media (min-width: 640px) {
+        .certificates-section h2 {
+          font-size: 48px;
+        }
+      }
+
+      .certificates-carousel .carousel-content {
+        background-color: #f8f7f4;
+      }
+
+      .certificates-carousel .carousel-item p {
+        font-size: 14px;
+      }
+
+      /* Footer */
+      footer {
+        border-top: 1px solid #e5e5e5;
+        padding: 48px 24px;
+        background-color: #f8f7f4;
+        text-align: center;
+        font-size: 14px;
+        color: #000;
+      }
+
+      .footer-container {
+        max-width: 1280px;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav>
+      <div class="nav-container">
+        <div class="nav-brand">.Me</div>
+        <div class="nav-links">
+          <a href="#who">About</a>
+          <a href="#projects">Projects</a>
+          <a href="#certificates">Certificates</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Who I Am Section -->
+    <section class="who-section" id="who">
+      <div class="who-container">
+        <h2>
+          <img src="https://media.licdn.com/dms/image/v2/D4E03AQE8ehUD_aSUbw/profile-displayphoto-shrink_200_200/B4EZOy8I8vHkAk-/0/1733873931678?e=2147483647&v=beta&t=NXn3ZY8rfe-8oT7a6_uuS8IGuF69mFQ8uk20Wb6lI9Q" alt="my_image" width="200px">
+        </h2>
+
+        <p>
+          Ouassim El Bachiri Full-Stack Developer | Cloud, have a Fullstack Development Diploma & Bachelor Degree in Computer System Engineering  passionate about designing robust,
+          scalable systems. Specialized in multi-cloud infrastructure, DevOps,
+          and transforming complex business requirements into elegant technical
+          implementations.
+          <br/>
+          <br/>
+          <b>Building scalable, secure Software\Cloud systems that solve real problems</b>
+        </p>
+
+        <div class="social-links">
+          <a href="https://www.linkedin.com/in/ouassim-el-bachiri-25528a254/" target="_blank" title="LinkedIn">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+              ></path>
+              <rect x="2" y="9" width="4" height="12"></rect>
+              <circle cx="4" cy="4" r="2"></circle>
+            </svg>
+          </a>
+          <a href="https://github.com/WsmEb" target="_blank" title="GitHub">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
+              ></path>
+            </svg>
+          </a>
+          <a href="mailto:ouassimelbachiri@gmail.com" title="Email">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="projects-section" id="projects">
+      <div class="projects-container">
+        <h2>Projects</h2>
+
+        <div class="carousel">
+          <div class="carousel-content">
+            <div class="carousel-inner" id="projectsCarousel">
+              <div class="carousel-item">
+                <h3>Global Infrastructure Migration</h3>
+                <p>Multi-region AWS deployment</p>
+                <a href="#">Learn more →</a>
+              </div>
+              <div class="carousel-item">
+                <h3>Microservices Transformation</h3>
+                <p>Containerized architecture</p>
+                <a href="#">Learn more →</a>
+              </div>
+              <div class="carousel-item">
+                <h3>Kubernetes at Scale</h3>
+                <p>Enterprise orchestration</p>
+                <a href="#">Learn more →</a>
+              </div>
+              <div class="carousel-item">
+                <h3>Cloud Cost Optimization</h3>
+                <p>Infrastructure optimization</p>
+                <a href="#">Learn more →</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="carousel-controls">
+            <button class="carousel-button" onclick="previousSlide('projects')">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                width="24"
+                height="24"
+              >
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+
+            <div class="carousel-dots" id="projectsDots"></div>
+
+            <button class="carousel-button" onclick="nextSlide('projects')">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                width="24"
+                height="24"
+              >
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Certificates Section -->
+    <section class="certificates-section" id="certificates">
+      <div class="certificates-container">
+        <h2>Certificates</h2>
+
+        <div class="carousel certificates-carousel">
+          <div class="carousel-content">
+            <div class="carousel-inner" id="certificatesCarousel">
+              <div class="carousel-item">
+                <h3>Fullstack Development Diploma</h3>
+                <p>Professional Training Institute</p>
+                <a href="#">View →</a>
+              </div>
+              <div class="carousel-item">
+                <h3>Bachelor Degree in Computer System Engineering</h3>
+                <p>University</p>
+                <a href="#">View →</a>
+              </div>
+              <div class="carousel-item">
+                <h3>AWS Solutions Architect Professional</h3>
+                <p>Amazon Web Services</p>
+                <a href="#">View →</a>
+              </div>
+              <div class="carousel-item">
+                <h3>Kubernetes Administrator (CKA)</h3>
+                <p>Cloud Native Computing Foundation</p>
+                <a href="#">View →</a>
+              </div>
+              <div class="carousel-item">
+                <h3>Google Cloud Professional Architect</h3>
+                <p>Google Cloud</p>
+                <a href="#">View →</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="carousel-controls">
+            <button
+              class="carousel-button"
+              onclick="previousSlide('certificates')"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                width="24"
+                height="24"
+              >
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+
+            <div class="carousel-dots" id="certificatesDots"></div>
+
+            <button class="carousel-button" onclick="nextSlide('certificates')">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                width="24"
+                height="24"
+              >
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-container">
+        <p>© 2024. Cloud Solutions Architect.</p>
+      </div>
+    </footer>
+
+    <script>
+      let projectSlide = 0;
+      let certificateSlide = 0;
+
+      const projectItems = document.querySelectorAll(
+        "#projectsCarousel .carousel-item",
+      ).length;
+      const certificateItems = document.querySelectorAll(
+        "#certificatesCarousel .carousel-item",
+      ).length;
+
+      function initializeDots(type, count) {
+        const dotsContainer = document.getElementById(
+          type === "projects" ? "projectsDots" : "certificatesDots",
+        );
+        dotsContainer.innerHTML = "";
+        for (let i = 0; i < count; i++) {
+          const dot = document.createElement("button");
+          dot.className = "carousel-dot" + (i === 0 ? " active" : "");
+          dot.onclick = () => goToSlide(type, i);
+          dotsContainer.appendChild(dot);
+        }
+      }
+
+      function updateCarousel(type) {
+        const carousel = document.getElementById(
+          type === "projects" ? "projectsCarousel" : "certificatesCarousel",
+        );
+        const slide = type === "projects" ? projectSlide : certificateSlide;
+        carousel.style.transform = `translateX(-${slide * 100}%)`;
+
+        const dots = document.querySelectorAll(
+          type === "projects"
+            ? "#projectsDots .carousel-dot"
+            : "#certificatesDots .carousel-dot",
+        );
+        dots.forEach((dot, index) => {
+          dot.classList.toggle("active", index === slide);
+        });
+      }
+
+      function nextSlide(type) {
+        const count = type === "projects" ? projectItems : certificateItems;
+        if (type === "projects") {
+          projectSlide = (projectSlide + 1) % count;
+        } else {
+          certificateSlide = (certificateSlide + 1) % count;
+        }
+        updateCarousel(type);
+      }
+
+      function previousSlide(type) {
+        const count = type === "projects" ? projectItems : certificateItems;
+        if (type === "projects") {
+          projectSlide = (projectSlide - 1 + count) % count;
+        } else {
+          certificateSlide = (certificateSlide - 1 + count) % count;
+        }
+        updateCarousel(type);
+      }
+
+      function goToSlide(type, index) {
+        if (type === "projects") {
+          projectSlide = index;
+        } else {
+          certificateSlide = index;
+        }
+        updateCarousel(type);
+      }
+
+      // Auto-rotate carousels
+      setInterval(() => {
+        nextSlide("projects");
+      }, 5000);
+
+      setInterval(() => {
+        nextSlide("certificates");
+      }, 5000);
+
+      // Initialize
+      initializeDots("projects", projectItems);
+      initializeDots("certificates", certificateItems);
+    </script>
+  </body>
+</html>
