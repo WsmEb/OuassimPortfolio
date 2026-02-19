@@ -1,651 +1,596 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ouassim El Bachiri </title>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Marrakech Protocol | Ouassim El Bachiri</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@1,6..96,400&family=Montserrat:wght@200;400;700&family=Playfair+Display:ital,wght@1,600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --clay: #cc7a5c;
+      --gold: #d4a017;
+      --bg: #0c0a09;
+      --deep-blue: #003366;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg);
+      overflow: hidden;
+      font-family: 'Montserrat', sans-serif;
+      color: #fff;
+      user-select: none;
+    }
+
+    canvas#bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    /* ========== CINEMATIC FILM EFFECTS ========== */
+    #vignette {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2100;
+      background: radial-gradient(circle, transparent 30%, rgba(0, 0, 0, 0.9) 130%);
+    }
+
+    #grain {
+      position: fixed;
+      inset: -100%;
+      pointer-events: none;
+      z-index: 2200;
+      background-image: url('https://grainy-gradients.vercel.app/noise.svg');
+      opacity: 0.04;
+      animation: grain 6s steps(10) infinite;
+    }
+
+    @keyframes grain {
+
+      0%,
+      100% {
+        transform: translate(0, 0);
       }
 
-      body {
-        font-family: Arial, Helvetica, sans-serif;
-        background-color: #f8f7f4;
-        color: #000;
-        line-height: 1.6;
+      10% {
+        transform: translate(-2%, -5%);
       }
 
-      /* Navigation */
-      nav {
-        position: fixed;
-        top: 0;
-        width: 100%;
-        z-index: 50;
-        background-color: #f8f7f4;
-        border-bottom: 1px solid #e5e5e5;
+      30% {
+        transform: translate(-10%, 2%);
       }
 
-      .nav-container {
-        max-width: 1280px;
-        margin: 0 auto;
-        padding: 0 24px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        height: 64px;
+      50% {
+        transform: translate(4%, 6%);
       }
 
-      .nav-brand {
-        font-size: 18px;
-        font-weight: bold;
-        color: #000;
+      70% {
+        transform: translate(-1%, 8%);
       }
 
-      .nav-links {
-        display: none;
-        gap: 32px;
-        font-size: 14px;
+      90% {
+        transform: translate(10%, 4%);
+      }
+    }
+
+    #cinematic-bars-t,
+    #cinematic-bars-b {
+      position: fixed;
+      left: 0;
+      width: 100%;
+      height: 0;
+      background: #000;
+      z-index: 2500;
+      transition: height 2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    #cinematic-bars-t {
+      top: 0;
+    }
+
+    #cinematic-bars-b {
+      bottom: 0;
+    }
+
+    .cinematic-mode #cinematic-bars-t,
+    .cinematic-mode #cinematic-bars-b {
+      height: 14vh;
+    }
+
+    /* ========== DOCUMENTARY INTRO ========== */
+    #intro-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 3000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 2s ease;
+    }
+
+    #doc-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 4rem;
+      font-style: italic;
+      letter-spacing: 6px;
+      margin-bottom: 20px;
+      opacity: 0;
+      background: linear-gradient(to right, #fff, var(--gold));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: fadeIn 3s forwards 0.5s;
+    }
+
+    #doc-subtitle {
+      font-size: 0.7rem;
+      letter-spacing: 12px;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0;
+      animation: fadeIn 3s forwards 1.5s;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
       }
 
-      .nav-links a {
-        color: #000;
-        text-decoration: none;
-        transition: opacity 0.3s;
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    #start-btn {
+      margin-top: 60px;
+      padding: 18px 50px;
+      background: none;
+      border: 1px solid rgba(212, 160, 23, 0.3);
+      color: var(--gold);
+      font-family: 'Montserrat';
+      letter-spacing: 6px;
+      cursor: pointer;
+      transition: all 0.6s;
+      opacity: 0;
+      animation: fadeIn 3s forwards 2.5s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #start-btn:hover {
+      border-color: #fff;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.05);
+      transform: scale(1.05);
+    }
+
+    /* ========== NARRATION SUBTITLES ========== */
+    #narration-box {
+      position: fixed;
+      bottom: 20vh;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70%;
+      text-align: center;
+      z-index: 2600;
+      pointer-events: none;
+      display: none;
+    }
+
+    #narration-text {
+      font-family: 'Bodoni Moda', serif;
+      font-style: italic;
+      font-size: 2.2rem;
+      color: #f7ede2;
+      text-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+      line-height: 1.5;
+    }
+
+    /* ========== PORTFOLIO UI (ULTRA PREMIUM) ========== */
+    #portal-ui {
+      position: fixed;
+      inset: 0;
+      display: none;
+      z-index: 4000;
+      background: radial-gradient(circle at center, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.8) 100%);
+      backdrop-filter: blur(25px);
+      align-items: center;
+      justify-content: center;
+    }
+
+    #portal-window {
+      width: 95%;
+      max-width: 1200px;
+      height: 85vh;
+      background: linear-gradient(135deg, rgba(20, 18, 16, 0.95) 0%, rgba(10, 8, 6, 0.95) 100%);
+      border: 1px solid rgba(212, 160, 23, 0.3);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 50px 100px rgba(0, 0, 0, 1);
+      animation: windowIn 1s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes windowIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9) translateY(40px);
       }
 
-      .nav-links a:hover {
-        opacity: 0.7;
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .p-header {
+      padding: 40px 60px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .p-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      color: var(--gold);
+      letter-spacing: 2px;
+    }
+
+    #close-p {
+      background: none;
+      border: 1px solid rgba(212, 160, 23, 0.5);
+      color: var(--gold);
+      padding: 10px 30px;
+      cursor: pointer;
+      transition: 0.4s;
+      letter-spacing: 4px;
+      font-size: 0.7rem;
+    }
+
+    #close-p:hover {
+      background: var(--gold);
+      color: #000;
+    }
+
+    .p-content {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .p-sidebar {
+      width: 300px;
+      border-right: 1px solid rgba(255, 255, 255, 0.03);
+      padding: 40px;
+    }
+
+    .p-sidebar h4 {
+      font-size: 0.6rem;
+      letter-spacing: 4px;
+      color: var(--gold);
+      margin-bottom: 30px;
+      opacity: 0.5;
+    }
+
+    .side-item {
+      margin-bottom: 25px;
+      cursor: pointer;
+      transition: 0.3s;
+      opacity: 0.6;
+    }
+
+    .side-item:hover,
+    .side-item.active {
+      opacity: 1;
+      transform: translateX(10px);
+      color: var(--gold);
+    }
+
+    .side-item h5 {
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+    }
+
+    .p-grid {
+      flex: 1;
+      padding: 60px;
+      overflow-y: auto;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 40px;
+    }
+
+    .card {
+      background: rgba(40, 30, 20, 0.4);
+      padding: 40px;
+      border: 1px solid rgba(212, 160, 23, 0.1);
+      position: relative;
+      transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    .card:hover {
+      transform: translateY(-15px) scale(1.02);
+      border-color: var(--gold);
+      background: rgba(60, 45, 30, 0.6);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 20px rgba(212, 160, 23, 0.2);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, transparent, rgba(212, 160, 23, 0.1), transparent);
+      transform: translateX(-100%);
+      transition: 0.8s;
+    }
+
+    .card:hover::before {
+      transform: translateX(100%);
+    }
+
+    .card h3 {
+      color: #fff;
+      margin-bottom: 20px;
+      font-size: 1.6rem;
+      font-family: 'Playfair Display', serif;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: #e0e0e0;
+      font-weight: 200;
+    }
+
+    .tag {
+      display: inline-block;
+      margin-top: 25px;
+      font-size: 0.6rem;
+      letter-spacing: 3px;
+      color: var(--gold);
+      opacity: 0.7;
+    }
+
+    /* ========== HUD INFO ========== */
+    #hud {
+      position: fixed;
+      inset: 50px;
+      pointer-events: none;
+      z-index: 1000;
+      display: none;
+      font-family: 'Montserrat';
+      font-size: 0.65rem;
+      letter-spacing: 4px;
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    .hud-tl {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .hud-tr {
+      position: absolute;
+      top: 0;
+      right: 0;
+      text-align: right;
+    }
+
+    .hud-bl {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
+
+    .hud-br {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      text-align: right;
+    }
+
+    /* ========== INTERACT HINT ========== */
+    #interact-hint {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 0.7rem;
+      letter-spacing: 8px;
+      color: var(--gold);
+      display: none;
+      z-index: 2600;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0.8;
+    }
+
+    #interact-hint::after {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 1px;
+      background: var(--gold);
+      margin-top: 10px;
+      transform: scaleX(0);
+      transition: 0.4s;
+    }
+
+    #interact-hint.visible::after {
+      transform: scaleX(1);
+    }
+
+    /* ========== CUSTOM CURSOR ========== */
+    #cursor {
+      position: fixed;
+      width: 40px;
+      height: 40px;
+      border: 1px solid rgba(212, 160, 23, 0.4);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 5000;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s, border 0.3s, transform 0.05s linear;
+      box-shadow: 0 0 15px rgba(212, 160, 23, 0.1);
+    }
+
+    #cursor-inner {
+      position: fixed;
+      width: 4px;
+      height: 4px;
+      background: #fff;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 5001;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s;
+    }
+
+    /* ========== SCANLINE & GLITCH EFFECTS ========== */
+    .scanline {
+      width: 100%;
+      height: 100px;
+      z-index: 4500;
+      background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(212, 160, 23, 0.05) 50%, rgba(0, 0, 0, 0) 100%);
+      opacity: 0.1;
+      position: absolute;
+      bottom: 100%;
+      animation: scanline 8s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes scanline {
+      0% {
+        bottom: 100%;
       }
 
-      @media (min-width: 768px) {
-        .nav-links {
-          display: flex;
-        }
+      80% {
+        bottom: 100%;
       }
 
-      /* Hero Section */
-      .hero {
-        margin-top: 64px;
-        padding: 96px 24px 64px;
+      100% {
+        bottom: -100px;
+      }
+    }
+
+    /* ========== BUTTON SHIMMER ========== */
+    #start-btn::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transform: rotate(45deg);
+      animation: shimmer 4s infinite;
+    }
+
+    @keyframes shimmer {
+      0% {
+        transform: translateX(-100%) rotate(45deg);
       }
 
-      .hero-container {
-        max-width: 768px;
-        margin: 0 auto;
-        text-align: center;
+      100% {
+        transform: translateX(100%) rotate(45deg);
       }
+    }
+  </style>
+</head>
 
-      .hero h1 {
-        font-size: 48px;
-        font-weight: bold;
-        color: #000;
-        margin-bottom: 24px;
-        line-height: 1.2;
-      }
+<body class="cinematic-mode">
 
-      @media (min-width: 640px) {
-        .hero h1 {
-          font-size: 56px;
-        }
-      }
+  <div id="vignette"></div>
+  <div id="grain"></div>
 
-      .hero p {
-        font-size: 18px;
-        color: #000;
-        max-width: 672px;
-        margin: 0 auto;
-      }
+  <div class="scanline"></div>
 
-      /* Who I Am Section */
-      .who-section {
-        padding: 80px 24px;
-        background-color: #f8f7f4;
-      }
+  <div id="cinematic-bars-t"></div>
+  <div id="cinematic-bars-b"></div>
 
-      .who-container {
-        max-width: 768px;
-        margin: 0 auto;
-      }
+  <div id="intro-overlay">
+    <div id="doc-title">MARRAKECH PROTOCOL</div>
+    <div id="doc-subtitle">THE OCHRE LEGACY | DIGITAL ARCHIVE v.01</div>
+  </div>
 
-      .who-section h2 {
-        font-size: 36px;
-        font-weight: bold;
-        color: #000;
-        margin-bottom: 32px;
-        text-align: center;
-      }
+  <div id="narration-box">
+    <div id="narration-text">Init...</div>
+  </div>
 
-      @media (min-width: 640px) {
-        .who-section h2 {
-          font-size: 48px;
-        }
-      }
+  <div id="interact-hint">CLICK MERCHANT TO INQUIRE</div>
 
-      .who-section p {
-        font-size: 18px;
-        color: #000;
-        line-height: 1.8;
-        margin-bottom: 48px;
-        text-align: center;
-      }
+  <div id="hud">
+    <div class="hud-tl">ARCHIVE.MARRAKECH<br>CORE: 31.6295° N, 7.9811° W</div>
+    <div class="hud-tr">DAYLIGHT: 100%<br>STATUS: EXHIBITION_REALIZM</div>
+    <div class="hud-bl">EXPERIENCE CURATOR:<br>OUASSIM EL BACHIRI</div>
+    <div class="hud-br">ORBITAL VIEW: ACTIVE<br>NODES DETECTED: 01</div>
+  </div>
 
-      .education {
-        border-top: 1px solid #000;
-        padding-top: 32px;
-        margin-bottom: 32px;
-      }
-
-      .education h3 {
-        font-size: 24px;
-        font-weight: bold;
-        color: #000;
-        margin-bottom: 24px;
-        text-align: center;
-      }
-
-      .education ul {
-        list-style: none;
-        text-align: center;
-      }
-
-      .education li {
-        font-size: 18px;
-        color: #000;
-        margin-bottom: 16px;
-      }
-
-      .social-links {
-        display: flex;
-        justify-content: center;
-        gap: 32px;
-        margin-top: 48px;
-      }
-
-      .social-links a {
-        color: #000;
-        text-decoration: none;
-        transition: opacity 0.3s;
-      }
-
-      .social-links a:hover {
-        opacity: 0.7;
-      }
-
-      .social-links svg {
-        width: 24px;
-        height: 24px;
-      }
-
-      /* Projects Section */
-      .projects-section {
-        padding: 80px 24px;
-        background-color: #f8f7f4;
-      }
-
-      .projects-container {
-        max-width: 1024px;
-        margin: 0 auto;
-      }
-
-      .projects-section h2 {
-        font-size: 36px;
-        font-weight: bold;
-        color: #000;
-        margin-bottom: 48px;
-        text-align: center;
-      }
-
-      @media (min-width: 640px) {
-        .projects-section h2 {
-          font-size: 48px;
-        }
-      }
-
-      .carousel {
-        position: relative;
-      }
-
-      .carousel-content {
-        overflow: hidden;
-        border: 1px solid #e5e5e5;
-        background-color: #f8f7f4;
-      }
-
-      .carousel-inner {
-        display: flex;
-        transition: transform 0.7s;
-      }
-
-      .carousel-item {
-        flex: 0 0 100%;
-        padding: 48px;
-      }
-
-      @media (min-width: 640px) {
-        .carousel-item {
-          padding: 64px;
-        }
-      }
-
-      .carousel-item h3 {
-        font-size: 24px;
-        font-weight: bold;
-        color: #000;
-        margin-bottom: 16px;
-      }
-
-      @media (min-width: 640px) {
-        .carousel-item h3 {
-          font-size: 28px;
-        }
-      }
-
-      .carousel-item p {
-        font-size: 16px;
-        color: #000;
-        margin-bottom: 24px;
-      }
-
-      .carousel-item a {
-        color: #000;
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: bold;
-        transition: opacity 0.3s;
-      }
-
-      .carousel-item a:hover {
-        opacity: 0.7;
-      }
-
-      .carousel-controls {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 24px;
-      }
-
-      .carousel-button {
-        background: none;
-        border: none;
-        padding: 8px;
-        color: #000;
-        cursor: pointer;
-        transition: opacity 0.3s;
-      }
-
-      .carousel-button:hover {
-        opacity: 0.7;
-      }
-
-      .carousel-dots {
-        display: flex;
-        gap: 8px;
-      }
-
-      .carousel-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background-color: #d4d4d4;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
-
-      .carousel-dot.active {
-        background-color: #000;
-      }
-
-      /* Certificates Section */
-      .certificates-section {
-        padding: 80px 24px;
-        background-color: #f8f7f4;
-      }
-
-      .certificates-container {
-        max-width: 1024px;
-        margin: 0 auto;
-      }
-
-      .certificates-section h2 {
-        font-size: 36px;
-        font-weight: bold;
-        color: #000;
-        margin-bottom: 48px;
-        text-align: center;
-      }
-
-      @media (min-width: 640px) {
-        .certificates-section h2 {
-          font-size: 48px;
-        }
-      }
-
-      .certificates-carousel .carousel-content {
-        background-color: #f8f7f4;
-      }
-
-      .certificates-carousel .carousel-item p {
-        font-size: 14px;
-      }
-
-      /* Footer */
-      footer {
-        border-top: 1px solid #e5e5e5;
-        padding: 48px 24px;
-        background-color: #f8f7f4;
-        text-align: center;
-        font-size: 14px;
-        color: #000;
-      }
-
-      .footer-container {
-        max-width: 1280px;
-        margin: 0 auto;
-      }
-    </style>
-  </head>
-  <body>
-    <!-- Navigation -->
-    <nav>
-      <div class="nav-container">
-        <div class="nav-brand">.Me</div>
-        <div class="nav-links">
-          <a href="#who">About</a>
-          <a href="#projects">Projects</a>
-          <a href="#certificates">Certificates</a>
-        </div>
+  <div id="portal-ui">
+    <div id="portal-window">
+      <div class="p-header">
+        <h2 id="p-title">THE ARCHIVE</h2>
+        <button id="close-p">DISMISS</button>
       </div>
-    </nav>
-
-    <!-- Who I Am Section -->
-    <section class="who-section" id="who">
-      <div class="who-container">
-        <h2>
-          <img src="https://media.licdn.com/dms/image/v2/D4E03AQE8ehUD_aSUbw/profile-displayphoto-shrink_200_200/B4EZOy8I8vHkAk-/0/1733873931678?e=2147483647&v=beta&t=NXn3ZY8rfe-8oT7a6_uuS8IGuF69mFQ8uk20Wb6lI9Q" alt="my_image" width="200px">
-        </h2>
-
-        <p>
-          Ouassim El Bachiri Full-Stack Developer | Cloud, have a Fullstack Development Diploma & Bachelor Degree in Computer System Engineering  passionate about designing robust,
-          scalable systems. Specialized in multi-cloud infrastructure, DevOps,
-          and transforming complex business requirements into elegant technical
-          implementations.
-          <br/>
-          <br/>
-          <b>Building scalable, secure Software\Cloud systems that solve real problems</b>
-        </p>
-
-        <div class="social-links">
-          <a href="https://www.linkedin.com/in/ouassim-el-bachiri-25528a254/" target="_blank" title="LinkedIn">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
-              ></path>
-              <rect x="2" y="9" width="4" height="12"></rect>
-              <circle cx="4" cy="4" r="2"></circle>
-            </svg>
-          </a>
-          <a href="https://github.com/WsmEb" target="_blank" title="GitHub">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
-              ></path>
-            </svg>
-          </a>
-          <a href="mailto:ouassimelbachiri@gmail.com" title="Email">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
-            </svg>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Projects Section -->
-    <section class="projects-section" id="projects">
-      <div class="projects-container">
-        <h2>Projects</h2>
-
-        <div class="carousel">
-          <div class="carousel-content">
-            <div class="carousel-inner" id="projectsCarousel">
-              <div class="carousel-item">
-                <h3>Global Infrastructure Migration</h3>
-                <p>Multi-region AWS deployment</p>
-                <a href="#">Learn more →</a>
-              </div>
-              <div class="carousel-item">
-                <h3>Microservices Transformation</h3>
-                <p>Containerized architecture</p>
-                <a href="#">Learn more →</a>
-              </div>
-              <div class="carousel-item">
-                <h3>Kubernetes at Scale</h3>
-                <p>Enterprise orchestration</p>
-                <a href="#">Learn more →</a>
-              </div>
-              <div class="carousel-item">
-                <h3>Cloud Cost Optimization</h3>
-                <p>Infrastructure optimization</p>
-                <a href="#">Learn more →</a>
-              </div>
-            </div>
+      <div class="p-content">
+        <div class="p-sidebar">
+          <h4>INDEX_01</h4>
+          <div class="side-item active">
+            <h5>OVERVIEW</h5>
           </div>
-
-          <div class="carousel-controls">
-            <button class="carousel-button" onclick="previousSlide('projects')">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                width="24"
-                height="24"
-              >
-                <polyline points="15 18 9 12 15 6"></polyline>
-              </svg>
-            </button>
-
-            <div class="carousel-dots" id="projectsDots"></div>
-
-            <button class="carousel-button" onclick="nextSlide('projects')">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                width="24"
-                height="24"
-              >
-                <polyline points="9 18 15 12 9 6"></polyline>
-              </svg>
-            </button>
+          <div class="side-item">
+            <h5>TECHNICAL_STK</h5>
+          </div>
+          <div class="side-item">
+            <h5>LEGACY_TRD</h5>
           </div>
         </div>
+        <div class="p-grid" id="p-body"></div>
       </div>
-    </section>
+    </div>
+  </div>
 
-    <!-- Certificates Section -->
-    <section class="certificates-section" id="certificates">
-      <div class="certificates-container">
-        <h2>Certificates</h2>
+  <div id="cursor"></div>
+  <div id="cursor-inner"></div>
 
-        <div class="carousel certificates-carousel">
-          <div class="carousel-content">
-            <div class="carousel-inner" id="certificatesCarousel">
-              <div class="carousel-item">
-                <h3>Fullstack Development Diploma</h3>
-                <p>Professional Training Institute</p>
-                <a href="#">View →</a>
-              </div>
-              <div class="carousel-item">
-                <h3>Bachelor Degree in Computer System Engineering</h3>
-                <p>University</p>
-                <a href="#">View →</a>
-              </div>
-              <div class="carousel-item">
-                <h3>AWS Solutions Architect Professional</h3>
-                <p>Amazon Web Services</p>
-                <a href="#">View →</a>
-              </div>
-              <div class="carousel-item">
-                <h3>Kubernetes Administrator (CKA)</h3>
-                <p>Cloud Native Computing Foundation</p>
-                <a href="#">View →</a>
-              </div>
-              <div class="carousel-item">
-                <h3>Google Cloud Professional Architect</h3>
-                <p>Google Cloud</p>
-                <a href="#">View →</a>
-              </div>
-            </div>
-          </div>
+  <canvas id="bg"></canvas>
 
-          <div class="carousel-controls">
-            <button
-              class="carousel-button"
-              onclick="previousSlide('certificates')"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                width="24"
-                height="24"
-              >
-                <polyline points="15 18 9 12 15 6"></polyline>
-              </svg>
-            </button>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module" src="js/main.js"></script>
+</body>
 
-            <div class="carousel-dots" id="certificatesDots"></div>
-
-            <button class="carousel-button" onclick="nextSlide('certificates')">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                width="24"
-                height="24"
-              >
-                <polyline points="9 18 15 12 9 6"></polyline>
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-      <div class="footer-container">
-        <p>© 2024. Cloud Solutions Architect.</p>
-      </div>
-    </footer>
-
-    <script>
-      let projectSlide = 0;
-      let certificateSlide = 0;
-
-      const projectItems = document.querySelectorAll(
-        "#projectsCarousel .carousel-item",
-      ).length;
-      const certificateItems = document.querySelectorAll(
-        "#certificatesCarousel .carousel-item",
-      ).length;
-
-      function initializeDots(type, count) {
-        const dotsContainer = document.getElementById(
-          type === "projects" ? "projectsDots" : "certificatesDots",
-        );
-        dotsContainer.innerHTML = "";
-        for (let i = 0; i < count; i++) {
-          const dot = document.createElement("button");
-          dot.className = "carousel-dot" + (i === 0 ? " active" : "");
-          dot.onclick = () => goToSlide(type, i);
-          dotsContainer.appendChild(dot);
-        }
-      }
-
-      function updateCarousel(type) {
-        const carousel = document.getElementById(
-          type === "projects" ? "projectsCarousel" : "certificatesCarousel",
-        );
-        const slide = type === "projects" ? projectSlide : certificateSlide;
-        carousel.style.transform = `translateX(-${slide * 100}%)`;
-
-        const dots = document.querySelectorAll(
-          type === "projects"
-            ? "#projectsDots .carousel-dot"
-            : "#certificatesDots .carousel-dot",
-        );
-        dots.forEach((dot, index) => {
-          dot.classList.toggle("active", index === slide);
-        });
-      }
-
-      function nextSlide(type) {
-        const count = type === "projects" ? projectItems : certificateItems;
-        if (type === "projects") {
-          projectSlide = (projectSlide + 1) % count;
-        } else {
-          certificateSlide = (certificateSlide + 1) % count;
-        }
-        updateCarousel(type);
-      }
-
-      function previousSlide(type) {
-        const count = type === "projects" ? projectItems : certificateItems;
-        if (type === "projects") {
-          projectSlide = (projectSlide - 1 + count) % count;
-        } else {
-          certificateSlide = (certificateSlide - 1 + count) % count;
-        }
-        updateCarousel(type);
-      }
-
-      function goToSlide(type, index) {
-        if (type === "projects") {
-          projectSlide = index;
-        } else {
-          certificateSlide = index;
-        }
-        updateCarousel(type);
-      }
-
-      // Auto-rotate carousels
-      setInterval(() => {
-        nextSlide("projects");
-      }, 5000);
-
-      setInterval(() => {
-        nextSlide("certificates");
-      }, 5000);
-
-      // Initialize
-      initializeDots("projects", projectItems);
-      initializeDots("certificates", certificateItems);
-    </script>
-  </body>
 </html>
