@@ -5,7 +5,7 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
 // ─── CONFIG & STATE ───────────────────────────────────────────
-let isDocIntro = true, introIndex = 0;
+let isDocIntro = false, introIndex = 0;
 let prevTime = performance.now();
 const mouse = new THREE.Vector2(), raycaster = new THREE.Raycaster();
 
@@ -33,13 +33,13 @@ const MATS = {
 };
 const waterfallMeshes = [];
 let waterTex; // Animated texture
+const tajineFires = []; // Animation tracking
+const tajineMat = new THREE.MeshStandardMaterial({ color: 0xcc7a5c, roughness: 0.9 });
+const fleshMat = new THREE.MeshStandardMaterial({ color: 0x8b0000, roughness: 0.7 });
+const emberMat = new THREE.MeshStandardMaterial({ color: 0xff4422, emissive: 0xff2200, emissiveIntensity: 3 });
 
-const NARRATION = [
-    "Marrakech... The Red City under the silver crescent.",
-    "Behold the Medina in miniature—a toy-box of trade and ancient code.",
-    "In the quiet shadows, legends come to life. Observe the Merchants and the Spirits of the night.",
-    "Engage with the silence. Step into the Moroccan Protocol."
-];
+
+
 
 // ─── RENDERER & SCENE ─────────────────────────────────────────
 const scene = new THREE.Scene();
@@ -332,11 +332,7 @@ function buildDiorama() {
     flagCarpet.position.set(-12, 15.1, 0); flagCarpet.rotation.x = -Math.PI / 2;
     diorama.add(flagCarpet);
 
-    // 8. Scattered Tajines
-    buildTajine(7, 0.2, 7, 1);
-    buildTajine(6.5, 0.2, 9, 0.82);
-    buildTajine(-2, 0.2, 4, 1.15);
-    buildTajine(0, 0, -12.5, 0.95);
+    buildTajine(7.5, 0.2, 10.5, 1.0);     // In front of Stall
 }
 
 function addGroundDetails() {
@@ -546,22 +542,59 @@ function addWiresAndLamps() {
     }
 }
 
-function buildTajine(x, y, z, s = 1) {
+function buildTajine(x, y, z, s = 1, isOpen = false) {
     const group = new THREE.Group();
-    // Base Dish
-    const base = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.4, 0.15, 32), MATS.tajine);
-    base.position.y = 0.075; group.add(base);
-    // Conical Lid
-    const lid = new THREE.Mesh(new THREE.ConeGeometry(0.48, 0.8, 32), MATS.tajine);
-    lid.position.y = 0.55; group.add(lid);
-    // Top Knob
-    const knob = new THREE.Mesh(new THREE.SphereGeometry(0.08, 16, 16), MATS.tajine);
-    knob.position.y = 0.95; group.add(knob);
+
+    // 1. Charcoal Fire Base (Majmar)
+    const fireBase = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.4, 0.12, 8), emberMat);
+    fireBase.position.y = 0.06; group.add(fireBase);
+
+    // 2. Base Dish
+    const base = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.4, 0.2, 32), tajineMat);
+    base.position.y = 0.22; group.add(base);
+
+    if (isOpen) {
+        // 3a. Flesh/Stew Inside
+        const flesh = new THREE.Mesh(new THREE.SphereGeometry(0.4, 16, 8, 0, Math.PI * 2, 0, Math.PI / 2), fleshMat);
+        flesh.position.y = 0.28; group.add(flesh);
+
+        // 3b. Tilted Lid
+        const lid = new THREE.Mesh(new THREE.ConeGeometry(0.48, 0.8, 32), tajineMat);
+        lid.position.set(0.65, 0.45, 0);
+        lid.rotation.z = -Math.PI / 3.5;
+        group.add(lid);
+    } else {
+        // 3. Conical Lid (Closed)
+        const lid = new THREE.Mesh(new THREE.ConeGeometry(0.48, 0.8, 32), tajineMat);
+        lid.position.y = 0.75; group.add(lid);
+        const knob = new THREE.Mesh(new THREE.SphereGeometry(0.08, 16, 16), tajineMat);
+        knob.position.y = 1.15; group.add(knob);
+    }
 
     group.scale.setScalar(s);
     group.position.set(x, y, z);
+
+    // 4. Dynamic Flickering Light
+    const fireLight = new THREE.PointLight(0xff5500, 5 * s, 5 * s);
+    fireLight.position.set(0, 0.5, 0); group.add(fireLight);
+
+    // 5. Fire Particles (Animated motes)
+    const fireParticles = new THREE.Group();
+    for (let i = 0; i < 10; i++) {
+        const p = new THREE.Mesh(new THREE.SphereGeometry(0.05 * s, 6, 6), new THREE.MeshBasicMaterial({ color: 0xffaa00, transparent: true }));
+        p.position.set((Math.random() - 0.5) * 0.6 * s, Math.random() * 0.5, (Math.random() - 0.5) * 0.6 * s);
+        p.userData = { speed: 0.02 + Math.random() * 0.02, life: Math.random() };
+        fireParticles.add(p);
+    }
+    group.add(fireParticles);
+
+    tajineFires.push({ light: fireLight, particles: fireParticles, s: s });
     diorama.add(group);
 }
+
+
+
+
 
 function buildMerchantStall(x, y, z) {
     const complex = new THREE.Group();
@@ -613,16 +646,16 @@ scene.add(diorama);
 // ─── PORTAL CONTENT ──────────────────────────────────────────
 const PORTAL_DATA = {
     'OVERVIEW': [
-        { h: "Ouassim El Bachiri", p: "Multi-disciplinary developer specializing in high-fidelity 3D and cloud architectures.", t: "PROFILE_V1" },
-        { h: "The Ochre Protocol", p: "Marrakech isn't just a place; it's a technical philosophy of layering and complexity.", t: "CORE_MISSION" }
-    ],
-    'TECHNICAL_STK': [
-        { h: "Engine Architecture", p: "Three.js, GLSL, WebGPU and customized post-processing pipelines.", t: "FRONTEND" },
-        { h: "Systems Cloud", p: "AWS Solutions Architecture, Terraform, Lambda, and Scalable Node.js clusters.", t: "BACKEND" }
-    ],
-    'LEGACY_TRD': [
-        { h: "Moroccan Zellige", p: "Applying ancient geometric patterns into modern vector-based UI systems.", t: "DESIGN" },
-        { h: "The Medina Labyrinth", p: "Architecture as a model for scalable API design—complex yet navigable.", t: "ANALOGY" }
+        {
+            img: "https://media.licdn.com/dms/image/v2/D4E03AQE8ehUD_aSUbw/profile-displayphoto-shrink_200_200/B4EZOy8I8vHkAk-/0/1733873931678?e=1773273600&v=beta&t=6Q9Wj1_LYdJiLvv_h_X72zBBMcwPF2HZaRnaBASpYGk",
+            h: "Ouassim El Bachiri",
+            t: "IDENTIFICATION"
+        },
+        {
+            h: "Engineering & Cloud",
+            p: "Full-Stack Developer with a Computer Systems Engineering degree and a Fullstack Diploma. Specialized in designing robust, scalable systems, multi-cloud infrastructure, and DevOps, transforming complex business requirements into elegant technical implementations.",
+            t: "SYSTEM_CORE"
+        }
     ]
 };
 
@@ -653,9 +686,10 @@ window.updateTab = (tab) => {
     const data = PORTAL_DATA[tab] || [];
     body.innerHTML = data.map((i, idx) => `
         <div class="card" style="animation: cardIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards ${idx * 0.15}s; opacity: 0;">
-            <h3>${i.h}</h3>
-            <p>${i.p}</p>
-            <div class="tag">${i.t}</div>
+            ${i.img ? `<div class="card-img-container"><img src="${i.img}" class="card-profile-img"></div>` : ''}
+            <h3>${i.h || ''}</h3>
+            ${i.p ? `<p>${i.p}</p>` : ''}
+            <div class="tag">${i.t || ''}</div>
         </div>
     `).join('');
 
@@ -672,62 +706,34 @@ window.updateTab = (tab) => {
         document.head.appendChild(style);
     }
 
-    // Update active state in sidebar
-    document.querySelectorAll('.side-item').forEach(el => {
-        el.classList.remove('active');
-        if (el.textContent.trim() === tab) el.classList.add('active');
-    });
 };
 
-// ─── CINEMATIC INTRO ──────────────────────────────────────────
-function startNarration() {
-    if (introIndex >= NARRATION.length) { endIntro(); return; }
-    const box = document.getElementById('narration-box');
-    const text = document.getElementById('narration-text');
-    box.style.display = 'block'; text.textContent = NARRATION[introIndex];
-    text.style.opacity = 0;
-    let op = 0; const fin = setInterval(() => { op += 0.05; text.style.opacity = op; if (op >= 1) clearInterval(fin); }, 50);
-    setTimeout(() => {
-        const fout = setInterval(() => { op -= 0.05; text.style.opacity = op; if (op <= 0) { clearInterval(fout); introIndex++; startNarration(); } }, 50);
-    }, 4500);
-}
 
-function endIntro() {
-    isDocIntro = false;
-    document.body.classList.remove('cinematic-mode');
-    document.getElementById('hud').style.display = 'block';
-    document.getElementById('narration-box').style.display = 'none';
-}
 
 // ─── INTERACTION & INPUT ─────────────────────────────────────
-// ─── START EXPERIENCE AUTOMATICALLY ───────────────────────
+// ─── INITIALIZATION ───────────────────────────────────────────
 window.addEventListener('load', () => {
-    const overlay = document.getElementById('intro-overlay');
-    if (overlay) {
-        overlay.style.opacity = '0';
-        setTimeout(() => {
-            overlay.style.display = 'none';
-            startNarration();
-        }, 800);
-    }
+    document.getElementById('hud').style.display = 'block';
 });
 
-document.querySelectorAll('.side-item').forEach(item => {
-    item.addEventListener('click', () => updateTab(item.textContent.trim()));
-});
 
 document.getElementById('close-p').addEventListener('click', () => {
     document.getElementById('portal-ui').style.display = 'none';
     controls.autoRotate = true;
 });
 
-window.addEventListener('click', (e) => {
-    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+const onSelect = (clientX, clientY) => {
+    mouse.x = (clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(clientY / window.innerHeight) * 2 + 1;
     raycaster.setFromCamera(mouse, camera);
     const hits = raycaster.intersectObjects(scene.children, true);
     for (let h of hits) if (h.object.userData.isMerchant) { openPortfolio(h.object); break; }
-});
+};
+
+window.addEventListener('mousedown', (e) => onSelect(e.clientX, e.clientY));
+window.addEventListener('touchstart', (e) => {
+    if (e.touches.length > 0) onSelect(e.touches[0].clientX, e.touches[0].clientY);
+}, { passive: false });
 
 document.addEventListener('mousemove', e => {
     const c = document.getElementById('cursor'), d = document.getElementById('cursor-inner');
@@ -787,8 +793,23 @@ function animate() {
         if (Math.abs(d.position.x) > 30) d.position.x *= -0.9;
     });
 
-    updateHUD();
+    // Animate Fire Particles and Flickering Intensity
+    tajineFires.forEach(f => {
+        f.light.intensity = (4 + Math.sin(t * 12 + Math.random()) * 2) * f.s;
+        f.particles.children.forEach(p => {
+            p.userData.life += p.userData.speed;
+            p.position.y += p.userData.speed;
+            p.scale.setScalar(1 - p.userData.life);
+            p.material.opacity = 1 - p.userData.life;
+            if (p.userData.life > 1) {
+                p.userData.life = 0;
+                p.position.y = 0.1;
+                p.scale.setScalar(1);
+            }
+        });
+    });
 
+    updateHUD();
     composer.render();
 }
 

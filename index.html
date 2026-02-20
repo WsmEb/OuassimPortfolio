@@ -110,77 +110,6 @@
       height: 14vh;
     }
 
-    /* ========== DOCUMENTARY INTRO ========== */
-    #intro-overlay {
-      position: fixed;
-      inset: 0;
-      background: #000;
-      z-index: 3000;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      transition: opacity 2s ease;
-    }
-
-    #doc-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 4rem;
-      font-style: italic;
-      letter-spacing: 6px;
-      margin-bottom: 20px;
-      opacity: 0;
-      background: linear-gradient(to right, #fff, var(--gold));
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: fadeIn 3s forwards 0.5s;
-    }
-
-    #doc-subtitle {
-      font-size: 0.7rem;
-      letter-spacing: 12px;
-      text-transform: uppercase;
-      color: var(--gold);
-      opacity: 0;
-      animation: fadeIn 3s forwards 1.5s;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    #start-btn {
-      margin-top: 60px;
-      padding: 18px 50px;
-      background: none;
-      border: 1px solid rgba(212, 160, 23, 0.3);
-      color: var(--gold);
-      font-family: 'Montserrat';
-      letter-spacing: 6px;
-      cursor: pointer;
-      transition: all 0.6s;
-      opacity: 0;
-      animation: fadeIn 3s forwards 2.5s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    #start-btn:hover {
-      border-color: #fff;
-      color: #fff;
-      background: rgba(255, 255, 255, 0.05);
-      transform: scale(1.05);
-    }
-
     /* ========== NARRATION SUBTITLES ========== */
     #narration-box {
       position: fixed;
@@ -362,8 +291,8 @@
     }
 
     .card p {
-      font-size: 0.95rem;
-      line-height: 1.8;
+      font-size: 0.8rem;
+      line-height: 1.5;
       color: #e0e0e0;
       font-weight: 200;
     }
@@ -375,6 +304,22 @@
       letter-spacing: 3px;
       color: var(--gold);
       opacity: 0.7;
+    }
+
+    .card-img-container {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 25px;
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(212, 160, 23, 0.3);
+    }
+
+    .card-profile-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     /* ========== HUD INFO ========== */
@@ -522,10 +467,81 @@
         transform: translateX(100%) rotate(45deg);
       }
     }
+
+    /* ========== RESPONSIVE DESIGN ========== */
+    @media (max-width: 900px) {
+      #portal-window {
+        width: 100%;
+        height: 100vh;
+        max-width: none;
+      }
+
+      .p-header {
+        padding: 20px;
+      }
+
+      .p-header h2 {
+        font-size: 1.8rem;
+      }
+
+      .p-content {
+        flex-direction: column;
+      }
+
+      .p-sidebar {
+        width: 100%;
+        height: auto;
+        padding: 20px;
+        display: flex;
+        overflow-x: auto;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      }
+
+      .p-sidebar h4 {
+        display: none;
+      }
+
+      .side-item {
+        margin-bottom: 0 !important;
+        margin-right: 20px;
+        white-space: nowrap;
+      }
+
+      .p-grid {
+        grid-template-columns: 1fr;
+        padding: 20px;
+        gap: 20px;
+      }
+
+      .card {
+        padding: 25px;
+      }
+
+      #hud {
+        inset: 20px;
+        font-size: 0.5rem;
+        letter-spacing: 2px;
+      }
+
+      #interact-hint {
+        font-size: 0.5rem;
+        letter-spacing: 4px;
+      }
+    }
+
+    /* Hide cursor on touch devices */
+    @media (hover: none) and (pointer: coarse) {
+
+      #cursor,
+      #cursor-inner {
+        display: none;
+      }
+    }
   </style>
 </head>
 
-<body class="cinematic-mode">
+<body>
 
   <div id="vignette"></div>
   <div id="grain"></div>
@@ -535,10 +551,7 @@
   <div id="cinematic-bars-t"></div>
   <div id="cinematic-bars-b"></div>
 
-  <div id="intro-overlay">
-    <div id="doc-title">MARRAKECH PROTOCOL</div>
-    <div id="doc-subtitle">THE OCHRE LEGACY | DIGITAL ARCHIVE v.01</div>
-  </div>
+
 
   <div id="narration-box">
     <div id="narration-text">Init...</div>
@@ -564,12 +577,6 @@
           <h4>INDEX_01</h4>
           <div class="side-item active">
             <h5>OVERVIEW</h5>
-          </div>
-          <div class="side-item">
-            <h5>TECHNICAL_STK</h5>
-          </div>
-          <div class="side-item">
-            <h5>LEGACY_TRD</h5>
           </div>
         </div>
         <div class="p-grid" id="p-body"></div>
